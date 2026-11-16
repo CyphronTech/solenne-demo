@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Solenne — Autumn/Winter 26</title>
-<meta name="description" content="Solenne: considered clothing, cut slowly. Demo storefront by CyphronTech.">
+<meta name="description" content="Solenne: considered clothing, cut slowly. A concept fashion storefront built by CyphronTech.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Solenne — fashion store concept by CyphronTech">
+<meta property="og:description" content="A concept online store for a small-run clothing label: collection filters, quick add to bag, a shoppable lookbook and a monthly letter.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=1200&h=630&q=80&auto=format&fit=crop">
+<meta property="og:url" content="https://cyphrontech.github.io/solenne-demo/">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion-pending");</script>
@@ -285,11 +292,59 @@
     .reveal { opacity: 1; transform: none; }
     .hero img { transform: none; }
   }
+  /* Agency ribbon: shown only when the demo is opened directly, not inside a preview frame */
+  .ribbon {
+    position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 90;
+    transform: translateX(-50%); width: min(calc(100% - 32px), 640px);
+    display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 18px;
+    border: 1px solid rgba(255, 255, 255, .14); border-radius: 999px;
+    background: rgba(28, 25, 23, .95); box-shadow: 0 18px 40px rgba(12, 10, 9, .35);
+    font: 400 14px/1.35 var(--sans); color: #fff;
+  }
+  .ribbon[hidden] { display: none; }
+  .ribbon .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ribbon p { flex: 1; min-width: 0; margin: 0; }
+  .ribbon p b { font-weight: 600; }
+  .ribbon a {
+    flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px;
+    border-radius: 999px; background: var(--color-accent); color: var(--color-on-accent);
+    font-weight: 500; text-decoration: none; white-space: nowrap;
+  }
+  .ribbon a:hover, .ribbon a:focus-visible { background: #fff; color: var(--color-primary); }
+  .ribbon button {
+    flex: none; width: 44px; height: 44px; border: 0; border-radius: 50%;
+    background: transparent; color: rgba(255, 255, 255, .75); font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .ribbon button:hover, .ribbon button:focus-visible { color: #fff; background: rgba(255, 255, 255, .1); }
+  @media (max-width: 560px) {
+    .ribbon { padding-left: 14px; gap: 8px; font-size: 13px; }
+    .ribbon .wide { display: none; }
+  }
 </style>
 </head>
 <body>
+<aside class="ribbon" aria-label="About this demo" hidden>
+  <p><b>Concept store by CyphronTech.</b> <span class="wide">We build online stores like this one.</span></p>
+  <a href="https://cyphrontech.com/web-development?utm_source=demo&amp;utm_medium=referral&amp;utm_campaign=solenne" target="_blank" rel="noopener">Get one like this<span class="sr-only"> (opens in a new tab)</span></a>
+  <button type="button" aria-label="Hide this message">×</button>
+</aside>
+<script>
+  /* Ribbon: hidden inside frames (our own site previews this page) and after it is dismissed */
+  (() => {
+    const ribbon = document.querySelector('.ribbon');
+    let framed = true, dismissed = false;
+    try { framed = window.self !== window.top; } catch (e) {}
+    try { dismissed = sessionStorage.getItem('ribbon-hidden') === '1'; } catch (e) {}
+    if (framed || dismissed) return;
+    ribbon.hidden = false;
+    ribbon.querySelector('button').addEventListener('click', () => {
+      ribbon.hidden = true;
+      try { sessionStorage.setItem('ribbon-hidden', '1'); } catch (e) {}
+    });
+  })();
+</script>
 <a class="skip" href="#main">Skip to content</a>
-<div class="announce">Complimentary shipping on orders above ₹5,000 · Free returns within 30 days</div>
+<div class="announce">Complimentary shipping on orders over $150 · Free returns within 30 days</div>
 
 <header class="nav">
   <button class="icon-btn menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks" id="menuBtn">
@@ -477,7 +532,7 @@
   </div>
   <div class="foot-bottom">
     <span>© 2026 Solenne. Demo storefront.</span>
-    <span>Designed &amp; built by <a href="https://cyphrontech.com/" target="_blank" rel="noopener">CyphronTech</a></span>
+    <span>Designed &amp; built by <a href="https://cyphrontech.com/web-development?utm_source=demo&amp;utm_medium=referral&amp;utm_campaign=solenne" target="_blank" rel="noopener">CyphronTech</a></span>
   </div>
 </footer>
 
@@ -497,16 +552,16 @@
 <script>
 const U = (id, w = 900) => `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
 const products = [
-  { id: 1, name: "Arlo Wool Blazer", cat: "tailoring", color: "Ivory", price: 18900, img: "1571513722275-4b41940f54b8", alt: "1608234808654-2a8875faa7fd", tag: "New", sw: ["#EFE9DD", "#9CA3AF"] },
-  { id: 2, name: "Navy Two-Piece Suit", cat: "tailoring", color: "Midnight", price: 28400, img: "1507679799987-c73779587ccf", alt: "1617137968427-85924c800a22", sw: ["#1E2A44", "#3F3F46"] },
-  { id: 3, name: "Mira Cashmere Crew", cat: "knitwear", color: "Ivory", price: 14500, img: "1620799140408-edc6dcb6d633", alt: "1558769132-cb1aea458c5e", tag: "Bestseller", gold: true, sw: ["#F5F5F4", "#D9CBB3", "#1C1917"] },
-  { id: 4, name: "Open Knit Poncho", cat: "knitwear", color: "Ecru", price: 12200, img: "1434389677669-e08b4cac3105", alt: "1512436991641-6745cdb1723f", sw: ["#E9E2D3", "#A8A29E"] },
-  { id: 5, name: "Hollis Trench", cat: "outerwear", color: "Camel", price: 32500, img: "1539533018447-63fcce2678e3", alt: "1617019114583-affb34d1b3cd", tag: "Limited", gold: true, sw: ["#B08A5A", "#1C1917"] },
-  { id: 6, name: "Suede Field Jacket", cat: "outerwear", color: "Tobacco", price: 24800, img: "1552374196-1ab2a1c593e8", alt: "1487222477894-8943e31ef7b2", sw: ["#8B5E3C", "#44403C"] },
-  { id: 7, name: "Selvedge Denim Jacket", cat: "essentials", color: "Indigo", price: 11600, img: "1611312449408-fcece27cdbb7", alt: "1525507119028-ed4c629a60a3", tag: "New", sw: ["#1E3A5F", "#0C0A09"] },
-  { id: 8, name: "Weekend Capsule Set", cat: "essentials", color: "Bone", price: 8900, img: "1516762689617-e1cffcef479d", alt: "1479064555552-3ef4979f8908", sw: ["#F5F5F4", "#C8B79A", "#78716C"] },
+  { id: 1, name: "Arlo Wool Blazer", cat: "tailoring", color: "Ivory", price: 425, img: "1571513722275-4b41940f54b8", alt: "1608234808654-2a8875faa7fd", tag: "New", sw: ["#EFE9DD", "#9CA3AF"] },
+  { id: 2, name: "Navy Two-Piece Suit", cat: "tailoring", color: "Midnight", price: 690, img: "1507679799987-c73779587ccf", alt: "1617137968427-85924c800a22", sw: ["#1E2A44", "#3F3F46"] },
+  { id: 3, name: "Mira Cashmere Crew", cat: "knitwear", color: "Ivory", price: 320, img: "1620799140408-edc6dcb6d633", alt: "1558769132-cb1aea458c5e", tag: "Bestseller", gold: true, sw: ["#F5F5F4", "#D9CBB3", "#1C1917"] },
+  { id: 4, name: "Open Knit Poncho", cat: "knitwear", color: "Ecru", price: 280, img: "1434389677669-e08b4cac3105", alt: "1512436991641-6745cdb1723f", sw: ["#E9E2D3", "#A8A29E"] },
+  { id: 5, name: "Hollis Trench", cat: "outerwear", color: "Camel", price: 780, img: "1539533018447-63fcce2678e3", alt: "1617019114583-affb34d1b3cd", tag: "Limited", gold: true, sw: ["#B08A5A", "#1C1917"] },
+  { id: 6, name: "Suede Field Jacket", cat: "outerwear", color: "Tobacco", price: 590, img: "1552374196-1ab2a1c593e8", alt: "1487222477894-8943e31ef7b2", sw: ["#8B5E3C", "#44403C"] },
+  { id: 7, name: "Selvedge Denim Jacket", cat: "essentials", color: "Indigo", price: 260, img: "1611312449408-fcece27cdbb7", alt: "1525507119028-ed4c629a60a3", tag: "New", sw: ["#1E3A5F", "#0C0A09"] },
+  { id: 8, name: "Weekend Capsule Set", cat: "essentials", color: "Bone", price: 195, img: "1516762689617-e1cffcef479d", alt: "1479064555552-3ef4979f8908", sw: ["#F5F5F4", "#C8B79A", "#78716C"] },
 ];
-const inr = n => "₹" + n.toLocaleString("en-IN");
+const usd = n => "$" + n.toLocaleString("en-US");
 const FREE_SHIP = 5000;
 const grid = document.getElementById("grid");
 const cart = new Map();
@@ -529,7 +584,7 @@ grid.innerHTML = products.map(p => `
         <div class="meta">${p.color}</div>
         <div class="swatches" aria-label="${p.sw.length} colours">${p.sw.map(c => `<i style="background:${c}"></i>`).join("")}</div>
       </div>
-      <span class="price">${inr(p.price)}</span>
+      <span class="price">${usd(p.price)}</span>
     </div>
   </article>`).join("");
 
@@ -596,15 +651,15 @@ function renderCart() {
         </div>
       </div>
       <div style="display:grid;justify-items:end;gap:8px">
-        <span class="price">${inr(i.q * i.price)}</span>
+        <span class="price">${usd(i.q * i.price)}</span>
         <button class="remove" data-rm="${i.id}">Remove</button>
       </div>
     </div>`).join("");
   const left = Math.max(0, FREE_SHIP - total);
   foot.innerHTML = `
-    <div class="meta" style="font-size:13px">${left ? `${inr(left)} away from free shipping` : "You have unlocked free shipping"}</div>
+    <div class="meta" style="font-size:13px">${left ? `${usd(left)} away from free shipping` : "You have unlocked free shipping"}</div>
     <div class="ship-bar"><i style="width:${Math.min(100, total / FREE_SHIP * 100)}%"></i></div>
-    <div class="total"><span>Subtotal</span><span>${inr(total)}</span></div>
+    <div class="total"><span>Subtotal</span><span>${usd(total)}</span></div>
     <small>Taxes included. Shipping calculated at checkout.</small>
     <button class="btn btn-solid" id="checkout">Checkout</button>`;
 }
